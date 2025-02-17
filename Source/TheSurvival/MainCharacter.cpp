@@ -1,6 +1,7 @@
 
 
 #include "MainCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -31,5 +32,18 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	InputComponent->BindAction("Sprint", IE_Pressed, this, &AMainCharacter::Sprint);
+	InputComponent->BindAction("Sprint", IE_Released, this, &AMainCharacter::StopSprint);
 }
 
+void AMainCharacter::Sprint()
+{
+	bIsSprint = true;
+	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+}
+
+void AMainCharacter::StopSprint()
+{
+	bIsSprint = false;
+	GetCharacterMovement()->MaxWalkSpeed = 125.0f;
+}
