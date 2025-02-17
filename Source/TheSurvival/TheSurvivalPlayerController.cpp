@@ -26,6 +26,9 @@ void ATheSurvivalPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ATheSurvivalPlayerController::Jump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ATheSurvivalPlayerController::StopJumping);
+
+	InputComponent->BindAction("Sprint", IE_Pressed, this, &ATheSurvivalPlayerController::Sprint);
+	InputComponent->BindAction("Sprint", IE_Released, this, &ATheSurvivalPlayerController::StopSprin);
 }
 
 void ATheSurvivalPlayerController::MoveForwardBackward(float Value)
@@ -72,4 +75,30 @@ void ATheSurvivalPlayerController::Turn(float Value)
 void ATheSurvivalPlayerController::LookUp(float Value)
 {
 	AddPitchInput(Value);
+}
+
+void ATheSurvivalPlayerController::Sprint()
+{
+	APawn* MyPawn = GetPawn();
+	if (MyPawn)
+	{
+		AMainCharacter* MyCharacter = Cast<AMainCharacter>(MyPawn);
+		if (MyCharacter)
+		{
+			MyCharacter->Sprint();
+		}
+	}
+}
+
+void ATheSurvivalPlayerController::StopSprint()
+{
+	APawn* MyPawn = GetPawn();
+	if (MyPawn)
+	{
+		AMainCharacter* MyCharacter = Cast<AMainCharacter>(MyPawn);
+		if (MyCharacter)
+		{
+			MyCharacter->StopSprint();
+		}
+	}
 }
