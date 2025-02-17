@@ -9,9 +9,14 @@
 
 ATheSurvivalGameMode::ATheSurvivalGameMode()
 {
-	DefaultPawnClass = AMainCharacter::StaticClass();
+    static ConstructorHelpers::FClassFinder<APawn> MainCharacterFinder(TEXT("/Game/Blueprints/BP_MainCharacter"));
 
-	PlayerControllerClass = ATheSurvivalPlayerController::StaticClass();
+    if (MainCharacterFinder.Succeeded())
+    {
+        DefaultPawnClass = MainCharacterFinder.Class;
+    }
+
+    PlayerControllerClass = ATheSurvivalPlayerController::StaticClass();
 }
 
 void ATheSurvivalGameMode::BeginPlay()
