@@ -28,7 +28,7 @@ void ATheSurvivalPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Jump", IE_Released, this, &ATheSurvivalPlayerController::StopJumping);
 
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &ATheSurvivalPlayerController::Sprint);
-	InputComponent->BindAction("Sprint", IE_Released, this, &ATheSurvivalPlayerController::StopSprin);
+	InputComponent->BindAction("Sprint", IE_Released, this, &ATheSurvivalPlayerController::StopSprint);
 }
 
 void ATheSurvivalPlayerController::MoveForwardBackward(float Value)
