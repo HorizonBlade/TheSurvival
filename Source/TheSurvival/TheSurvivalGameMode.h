@@ -14,4 +14,9 @@ class THESURVIVAL_API ATheSurvivalGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	ATheSurvivalGameMode();
+
+protected:
+	virtual void BeginPlay() override;
 };
