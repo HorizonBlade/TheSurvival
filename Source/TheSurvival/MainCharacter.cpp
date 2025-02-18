@@ -25,6 +25,7 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GetCharacterMovement()->MaxWalkSpeed = 125.f;
 }
 
 void AMainCharacter::Tick(float DeltaTime)
@@ -37,11 +38,29 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	InputComponent->BindAxis("MoveForwardBackward", this, &AMainCharacter::MoveForwardBackward);
+	InputComponent->BindAxis("MoveRightLeft", this, &AMainCharacter::MoveRightLeft);
+
+	InputComponent->BindAxis("Turn", this, &AMainCharacter::Turn);
+	InputComponent->BindAxis("LookUp", this, &AMainCharacter::LookUp);
+
 	InputComponent->BindAction("Jump", IE_Pressed, this, &AMainCharacter::Jump);
 	InputComponent->BindAction("Jump", IE_Released, this, &AMainCharacter::StopJumping);
 
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &AMainCharacter::Sprint);
 	InputComponent->BindAction("Sprint", IE_Released, this, &AMainCharacter::StopSprint);
+}
+
+void AMainCharacter::MoveForwardBackward(float Value)
+{
+	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
+	AddMovementInput(Direction, Value);
+}
+
+void AMainCharacter::MoveRightLeft(float Value)
+{
+	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
+	AddMovementInput(Direction, Value);
 }
 
 void AMainCharacter::Jump()
@@ -55,11 +74,23 @@ void AMainCharacter::Jump()
 		}
 	}
 	Super::Jump();
+	bPressedJump = true;
 }
 
 void AMainCharacter::StopJumping()
 {
+	bPressedJump = false;
 	Super::StopJumping();
+}
+
+void AMainCharacter::Turn(float Value)
+{
+	AddControllerYawInput(Value);
+}
+
+void AMainCharacter::LookUp(float Value)
+{
+	AddControllerPitchInput(Value);
 }
 
 void AMainCharacter::Sprint()
