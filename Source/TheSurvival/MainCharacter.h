@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "IInteractable.h"
 #include "MainCharacter.generated.h"
 
 UCLASS()
@@ -46,4 +47,10 @@ public:
 
 	bool bIsSprint;
 	bool bPressedJump;
+
+	void Interact();
+	void CheckForInteractable();
+
+private:
+	AActor* InteractableActor;
 };

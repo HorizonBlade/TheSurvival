@@ -31,7 +31,7 @@ void AMainCharacter::BeginPlay()
 void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	CheckForInteractable();
 }
 
 void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -49,6 +49,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &AMainCharacter::Sprint);
 	InputComponent->BindAction("Sprint", IE_Released, this, &AMainCharacter::StopSprint);
+
+	InputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
 }
 
 void AMainCharacter::MoveForwardBackward(float Value)
@@ -103,4 +105,45 @@ void AMainCharacter::StopSprint()
 {
 	bIsSprint = false;
 	GetCharacterMovement()->MaxWalkSpeed = 125.0f;
+}
+
+void AMainCharacter::CheckForInteractable()
+{
+	FHitResult HitResult;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this);
+
+	FVector StartLocation = GetActorLocation();
+	FVector EndLocation = StartLocation + (GetActorForwardVector() * 200.0f);
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, CollisionParams);
+
+	if (bHit)
+	{
+		AActor* HitActor = HitResult.GetActor();
+		if (HitActor && HitActor->Implements<UIInteractable>())
+		{
+			InteractableActor = HitActor;
+		}
+		else
+		{
+			InteractableActor = nullptr;
+		}
+	}
+	else
+	{
+		InteractableActor = nullptr;
+	}
+}
+
+void AMainCharacter::Interact()
+{
+	if (InteractableActor)
+	{
+		IIInteractable* Interactable = Cast<IIInteractable>(InteractableActor);
+		if (Interactable)
+		{
+			Interactable->Interact(this);
+		}
+	}
 }
