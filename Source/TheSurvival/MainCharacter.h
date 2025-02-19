@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "IInteractable.h"
+#include "InventoryComponent.h"
 #include "MainCharacter.generated.h"
 
 UCLASS()
@@ -53,4 +54,7 @@ public:
 
 private:
 	AActor* InteractableActor;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
+	UInventoryComponent* InventoryComponent;
 };
