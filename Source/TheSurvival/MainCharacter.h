@@ -8,6 +8,7 @@
 #include "Camera/CameraComponent.h"
 #include "IInteractable.h"
 #include "InventoryComponent.h"
+#include "WBP_Inventory.h"
 #include "MainCharacter.generated.h"
 
 UCLASS()
@@ -51,6 +52,14 @@ public:
 
 	void Interact();
 	void CheckForInteractable();
+
+	void ToggleInventory();
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UWBP_Inventory> InventoryWidgetClass;
+
+	UWBP_Inventory* InventoryWidget;
+
 
 private:
 	AActor* InteractableActor;

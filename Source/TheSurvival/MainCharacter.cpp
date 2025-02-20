@@ -53,6 +53,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	InputComponent->BindAction("Sprint", IE_Released, this, &AMainCharacter::StopSprint);
 
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
+
+	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AMainCharacter::ToggleInventory);
 }
 
 void AMainCharacter::MoveForwardBackward(float Value)
@@ -147,5 +149,23 @@ void AMainCharacter::Interact()
 		{
 			Interactable->Interact(this);
 		}
+	}
+}
+
+void AMainCharacter::ToggleInventory()
+{
+	if (!InventoryWidget)
+	{
+		InventoryWidget = CreateWidget<UWBP_Inventory>(GetWorld(), InventoryWidgetClass);
+		if (InventoryWidget)
+		{
+			InventoryWidget->SetInventory(InventoryComponent);
+			InventoryWidget->AddToViewport();
+		}
+	}
+	else
+	{
+		InventoryWidget->RemoveFromParent();
+		InventoryWidget = nullptr;
 	}
 }
