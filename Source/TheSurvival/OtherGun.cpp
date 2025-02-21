@@ -1,4 +1,5 @@
 #include "OtherGun.h"
+#include <Kismet/GameplayStatics.h>
 
 
 
@@ -26,4 +27,12 @@ void AOtherGun::Fire()
 void AOtherGun::Reload()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Weapon reloaded!"));
+}
+
+void AOtherGun::DealDamage(AActor* HitActor)
+{
+	if (HitActor)
+	{
+		UGameplayStatics::ApplyDamage(HitActor, Damage, GetInstigatorController(), this, UDamageType::StaticClass());
+	}
 }

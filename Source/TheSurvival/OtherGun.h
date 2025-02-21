@@ -32,4 +32,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	int32 Ammo;
+
+	UFUNCTION()
+	void DealDamage(AActor* HitActor);
 };
