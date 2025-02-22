@@ -1,9 +1,16 @@
 #include "MeleeWeapon.h"
+#include "InventoryComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 
 
 AMeleeWeapon::AMeleeWeapon()
 {
+    Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeleeGunMesh"));
+    Mesh->SetupAttachment(RootComponent);
+
+    AmmoType = "MeleeWeapon";
+
 	bIsMalee = true;
 }
 
@@ -22,4 +29,17 @@ void AMeleeWeapon::Fire()
     }
 
     UE_LOG(LogTemp, Warning, TEXT("Melee attack!"));
+}
+
+void AMeleeWeapon::Interact(AActor* Interactor)
+{
+    if (Interactor)
+    {
+        UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
+        if (Inventory)
+        {
+            Inventory->AddItem(FName("MeleeWeapon"), 1);
+            Destroy();
+        }
+    }
 }

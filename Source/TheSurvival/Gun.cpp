@@ -1,11 +1,17 @@
 #include "Gun.h"
+#include "InventoryComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 
 
 AGun::AGun()
 {
+    GunMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GunMesh"));
+    GunMesh->SetupAttachment(RootComponent);
+
 	bIsMalee = false;
 	Ammo = 30;
+    AmmoType = "Pistol";
 }
 
 void AGun::Fire()
@@ -33,4 +39,17 @@ void AGun::Fire()
     {
         UE_LOG(LogTemp, Warning, TEXT("No ammo! Reload needed."));
 	}
+}
+
+void AGun::Interact(AActor* Interactor)
+{
+    if (Interactor)
+    {
+        UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
+        if (Inventory)
+        {
+            Inventory->AddItem(FName("Gun"), 1);
+            Destroy(); 
+        }
+    }
 }

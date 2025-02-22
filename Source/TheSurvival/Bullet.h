@@ -2,10 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "IInteractable.h"
 #include "Bullet.generated.h"
 
 UCLASS()
-class THESURVIVAL_API ABullet : public AActor
+class THESURVIVAL_API ABullet : public AActor, public IIInteractable
 {
 	GENERATED_BODY()
 	
@@ -17,6 +18,7 @@ protected:
 
 public:
     virtual void Tick(float DeltaTime) override;
+    virtual void Interact(AActor* Interactor) override;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Bullet")
     float Damage;
@@ -26,6 +28,9 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
     UStaticMeshComponent* BulletMesh;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
+    FName AmmoType;
 
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TSubclassOf<class ABullet> BulletClass;

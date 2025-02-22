@@ -2,6 +2,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "InventoryComponent.h"
 
 
 ABullet::ABullet()
@@ -18,6 +19,7 @@ ABullet::ABullet()
 
     Damage = 25.0f;
     AmmoPerPack = 30;
+    AmmoType = "PistolAmmo";
 
     OnActorHit.AddDynamic(this, &ABullet::OnHit);
 }
@@ -38,5 +40,18 @@ void ABullet::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse
     {
         UGameplayStatics::ApplyDamage(OtherActor, Damage, nullptr, this, UDamageType::StaticClass());
         Destroy();
+    }
+}
+
+void ABullet::Interact(AActor* Interactor)
+{
+    if (Interactor)
+    {
+        UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
+        if (Inventory)
+        {
+            Inventory->AddItem(AmmoType, AmmoPerPack);
+            Destroy();
+        }
     }
 }
