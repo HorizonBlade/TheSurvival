@@ -1,4 +1,5 @@
 #include "Gun.h"
+#include "MainCharacter.h"
 #include "InventoryComponent.h"
 #include "Components/StaticMeshComponent.h"
 
@@ -10,35 +11,44 @@ AGun::AGun()
     GunMesh->SetupAttachment(RootComponent);
 
 	bIsMalee = false;
-	Ammo = 30;
-    AmmoType = "Pistol";
+	bIsEquipped = false;
+
+    WeaponType = "Pistol";
+    RequiredAmmoType = "PistolAmmo";
 }
 
 void AGun::Fire()
 {
-	if (Ammo > 0)
+	if (!CanFire()) return;
+
+	AMainCharacter* OwnerCharacter = Cast<AMainCharacter>(GetOwner());
+	if (!OwnerCharacter) return;
+
+	UInventoryComponent* Inventory = OwnerCharacter->FindComponentByClass<UInventoryComponent>();
+	if (!Inventory) return;
+
+	if (!HasAmmoInInventory(Inventory))
 	{
-		Ammo--;
-
-        FHitResult HitResult;
-        FVector Start = GetActorLocation();
-        FVector ForwardVector = GetActorForwardVector();
-        FVector End = Start + (ForwardVector * 5000);
-
-        FCollisionQueryParams CollisionParams;
-        CollisionParams.AddIgnoredActor(this);
-
-        if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams))
-        {
-            DealDamage(HitResult.GetActor());
-        }
-
-        UE_LOG(LogTemp, Warning, TEXT("Gun fired! Ammo left: %d"), Ammo);
-    }
-    else
-    {
-        UE_LOG(LogTemp, Warning, TEXT("No ammo! Reload needed."));
+		UE_LOG(LogTemp, Warning, TEXT("Нет патронов для стрельбы!"));
+		return;
 	}
+
+	Inventory->RemoveItem(RequiredAmmoType, 1);
+
+	FHitResult HitResult;
+	FVector Start = GetActorLocation();
+	FVector ForwardVector = GetActorForwardVector();
+	FVector End = Start + (ForwardVector * 5000);
+
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this);
+
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams))
+	{
+		DealDamage(HitResult.GetActor());
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Выстрел! Оружие: %s, Осталось патронов: %s"), *WeaponType.ToString(), *RequiredAmmoType.ToString());
 }
 
 void AGun::Interact(AActor* Interactor)
@@ -48,8 +58,20 @@ void AGun::Interact(AActor* Interactor)
         UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
         if (Inventory)
         {
-            Inventory->AddItem(FName("Gun"), 1);
-            Destroy(); 
+			Inventory->AddItem(FName("Gun"), 1);
+
+			SetActorHiddenInGame(true);
+			SetActorEnableCollision(false);
         }
     }
+}
+
+bool AGun::HasAmmoInInventory(UInventoryComponent* Inventory) const
+{
+	return Inventory && Inventory->HasItem(RequiredAmmoType);
+}
+
+bool AGun::CanFire() const
+{
+	return bIsEquipped && HasAmmoInInventory(Cast<AMainCharacter>(GetOwner())->FindComponentByClass<UInventoryComponent>());
 }

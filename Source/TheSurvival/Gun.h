@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "OtherGun.h"
 #include "IInteractable.h"
+#include "InventoryComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Gun.generated.h"
 
 /**
@@ -20,8 +22,18 @@ public:
 	virtual void Interact(AActor* Interactor) override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	FName AmmoType;
+	FName WeaponType;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	FName RequiredAmmoType;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	UStaticMeshComponent* GunMesh;
+
+	bool HasAmmoInInventory(UInventoryComponent* Inventory) const;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+	bool bIsEquipped;
+
+	bool CanFire() const;
 };
