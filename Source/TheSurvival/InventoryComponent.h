@@ -37,6 +37,9 @@ public:
 	bool RemoveItem(FName ItemID, int32 Quantity = 1);
 	bool HasItem(FName ItemID) const;
 
+	int32 GetItemAmount(FName ItemID) const;
+	bool HasAmmo(FName AmmoID, int32 RequiredAmount) const;
+
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	TArray<FInventoryItem> GetItems() const { return Items; }
 		
