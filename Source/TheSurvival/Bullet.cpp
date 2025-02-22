@@ -19,7 +19,7 @@ ABullet::ABullet()
 
     Damage = 25.0f;
     AmmoPerPack = 30;
-    AmmoType = "PistolAmmo";
+    AmmoItemID = "PistolAmmo";
 
     OnActorHit.AddDynamic(this, &ABullet::OnHit);
 }
@@ -50,7 +50,7 @@ void ABullet::Interact(AActor* Interactor)
         UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
         if (Inventory)
         {
-            Inventory->AddItem(AmmoType, AmmoPerPack);
+            Inventory->AddItem(AmmoItemID, AmmoPerPack);
             Destroy();
         }
     }

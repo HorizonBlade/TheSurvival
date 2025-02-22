@@ -30,7 +30,7 @@ public:
     UStaticMeshComponent* BulletMesh;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
-    FName AmmoType;
+    FName AmmoItemID;;
 
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TSubclassOf<class ABullet> BulletClass;
