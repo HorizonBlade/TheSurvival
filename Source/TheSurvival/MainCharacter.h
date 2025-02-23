@@ -9,6 +9,7 @@
 #include "IInteractable.h"
 #include "InventoryComponent.h"
 #include "WBP_Inventory.h"
+#include "Gun.h"
 #include "MainCharacter.generated.h"
 
 UCLASS()
@@ -30,6 +31,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "JumpAnimations")
 	UAnimMontage* JumpMontage;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons")
+	AGun* CurrentWeapon;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
@@ -54,6 +58,8 @@ public:
 	void CheckForInteractable();
 
 	void ToggleInventory();
+
+	void EquipWeapon();
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UWBP_Inventory> InventoryWidgetClass;

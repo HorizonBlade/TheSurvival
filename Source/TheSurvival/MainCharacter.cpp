@@ -5,6 +5,7 @@
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "EngineUtils.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -54,7 +55,9 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
 
-	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AMainCharacter::ToggleInventory);
+	InputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
+
+	PlayerInputComponent->BindAction("EquipWeapon", IE_Pressed, this, &AMainCharacter::EquipWeapon);
 }
 
 void AMainCharacter::MoveForwardBackward(float Value)
@@ -168,4 +171,47 @@ void AMainCharacter::ToggleInventory()
 		InventoryWidget->RemoveFromParent();
 		InventoryWidget = nullptr;
 	}
+}
+
+void AMainCharacter::EquipWeapon()
+{
+	if (!InventoryComponent) return;
+
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->SetActorHiddenInGame(true);
+		CurrentWeapon->bIsEquipped = false;
+		CurrentWeapon = nullptr;
+		UE_LOG(LogTemp, Warning, TEXT("Weapons stowed in inventory."));
+		return;
+	}
+
+	if (!InventoryComponent->HasItem(FName("Gun")))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("You don't have a gun in your inventory!"));
+		return;
+	}
+
+	for (TActorIterator<AGun> It(GetWorld()); It; ++It)
+	{
+		AGun* Gun = *It;
+		if (Gun && Gun->WeaponType == "Pistol" && Gun->IsHidden())
+		{
+			CurrentWeapon = Gun;
+			break;
+		}
+	}
+
+	if (!CurrentWeapon)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No gun found for the outfit!"));
+		return;
+	}
+
+	CurrentWeapon->SetActorHiddenInGame(false);
+	CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "WeaponSocket");
+	CurrentWeapon->SetOwner(this);
+	CurrentWeapon->bIsEquipped = true;
+
+	UE_LOG(LogTemp, Warning, TEXT("You equipped the gun!"));
 }
