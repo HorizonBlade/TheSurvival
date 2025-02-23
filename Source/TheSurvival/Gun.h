@@ -19,6 +19,7 @@ public:
 	AGun();
 
 	virtual void Fire() override;
+	virtual void Reload() override;
 	virtual void Interact(AActor* Interactor) override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
@@ -36,4 +37,15 @@ public:
 	bool bIsEquipped;
 
 	bool CanFire() const;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	int32 MaxAmmoInClip;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
+	int32 CurrentAmmoInClip;
+
+	bool CanReload() const;
+
+	UFUNCTION()
+	void AddAmmo(int32 AmmoAmount);
 };

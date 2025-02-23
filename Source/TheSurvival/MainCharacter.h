@@ -61,6 +61,7 @@ public:
 
 	void EquipWeapon();
 	void Fire();
+	void Reload();
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UWBP_Inventory> InventoryWidgetClass;

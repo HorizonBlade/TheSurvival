@@ -59,6 +59,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("EquipWeapon", IE_Pressed, this, &AMainCharacter::EquipWeapon);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMainCharacter::Fire);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMainCharacter::Reload);
 }
 
 void AMainCharacter::MoveForwardBackward(float Value)
@@ -226,5 +227,13 @@ void AMainCharacter::Fire()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No weapon equipped!"));
+	}
+}
+
+void AMainCharacter::Reload()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Reload();
 	}
 }
