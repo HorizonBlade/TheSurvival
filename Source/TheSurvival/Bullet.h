@@ -2,11 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "IInteractable.h"
 #include "Bullet.generated.h"
 
 UCLASS()
-class THESURVIVAL_API ABullet : public AActor, public IIInteractable
+class THESURVIVAL_API ABullet : public AActor
 {
 	GENERATED_BODY()
 	
@@ -18,7 +17,6 @@ protected:
 
 public:
     virtual void Tick(float DeltaTime) override;
-    virtual void Interact(AActor* Interactor) override;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Bullet")
     float Damage;

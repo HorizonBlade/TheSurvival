@@ -18,7 +18,6 @@ ABullet::ABullet()
     ProjectileMovement->bRotationFollowsVelocity = true;
 
     Damage = 25.0f;
-    AmmoPerPack = 30;
     AmmoItemID = "PistolAmmo";
 
     OnActorHit.AddDynamic(this, &ABullet::OnHit);
@@ -40,18 +39,5 @@ void ABullet::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse
     {
         UGameplayStatics::ApplyDamage(OtherActor, Damage, nullptr, this, UDamageType::StaticClass());
         Destroy();
-    }
-}
-
-void ABullet::Interact(AActor* Interactor)
-{
-    if (Interactor)
-    {
-        UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
-        if (Inventory)
-        {
-            Inventory->AddItem(AmmoItemID, AmmoPerPack);
-            Destroy();
-        }
     }
 }
