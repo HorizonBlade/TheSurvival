@@ -58,6 +58,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
 
 	PlayerInputComponent->BindAction("EquipWeapon", IE_Pressed, this, &AMainCharacter::EquipWeapon);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMainCharacter::Fire);
 }
 
 void AMainCharacter::MoveForwardBackward(float Value)
@@ -214,4 +215,16 @@ void AMainCharacter::EquipWeapon()
 	CurrentWeapon->bIsEquipped = true;
 
 	UE_LOG(LogTemp, Warning, TEXT("You equipped the gun!"));
+}
+
+void AMainCharacter::Fire()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Fire();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No weapon equipped!"));
+	}
 }
