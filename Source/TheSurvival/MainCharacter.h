@@ -10,6 +10,7 @@
 #include "InventoryComponent.h"
 #include "WBP_Inventory.h"
 #include "Gun.h"
+#include "MeleeWeapon.h"
 #include "MainCharacter.generated.h"
 
 UCLASS()
@@ -34,6 +35,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons")
 	AGun* CurrentWeapon;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons")
+	AMeleeWeapon* MeleeWeapon;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
@@ -60,6 +64,7 @@ public:
 	void ToggleInventory();
 
 	void EquipWeapon();
+	void EquipWeapon2();
 	void Fire();
 	void Reload();
 

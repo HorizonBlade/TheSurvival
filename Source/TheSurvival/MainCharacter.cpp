@@ -55,11 +55,11 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
 
-	InputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
+	InputComponent->BindAction("EquipWeapon", IE_Pressed, this, &AMainCharacter::EquipWeapon);
+	InputComponent->BindAction("EquipWeapon2", IE_Pressed, this, &AMainCharacter::EquipWeapon2);
 
-	PlayerInputComponent->BindAction("EquipWeapon", IE_Pressed, this, &AMainCharacter::EquipWeapon);
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMainCharacter::Fire);
-	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMainCharacter::Reload);
+	InputComponent->BindAction("Fire", IE_Pressed, this, &AMainCharacter::Fire);
+	InputComponent->BindAction("Reload", IE_Pressed, this, &AMainCharacter::Reload);
 }
 
 void AMainCharacter::MoveForwardBackward(float Value)
@@ -218,11 +218,58 @@ void AMainCharacter::EquipWeapon()
 	UE_LOG(LogTemp, Warning, TEXT("You equipped the gun!"));
 }
 
+void AMainCharacter::EquipWeapon2()
+{
+	if (!InventoryComponent) return;
+
+	if (MeleeWeapon)
+	{
+		MeleeWeapon->SetActorHiddenInGame(true);
+		MeleeWeapon->bIsEquipped = false;
+		MeleeWeapon = nullptr;
+		UE_LOG(LogTemp, Warning, TEXT("MeleeWeapon stowed in inventory."));
+		return;
+	}
+
+	if (!InventoryComponent->HasItem(FName("MeleeWeapon")))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("You don't have a MeleeWeapon in your inventory!"));
+		return;
+	}
+
+	for (TActorIterator<AMeleeWeapon> It(GetWorld()); It; ++It)
+	{
+		if (*It && (*It)->WeaponType == "MeleeWeapon" && (*It)->IsHidden())
+		{
+			MeleeWeapon = *It;
+			break;
+		}
+	}
+
+	if (!MeleeWeapon)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No MeleeWeapon found for the outfit!"));
+		return;
+	}
+
+	MeleeWeapon->SetActorHiddenInGame(false);
+	MeleeWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "WeaponSocket");
+	MeleeWeapon->SetOwner(this);
+	MeleeWeapon->bIsEquipped = true;
+
+	UE_LOG(LogTemp, Warning, TEXT("You equipped the MeleeWeapon!"));
+}
+
+
 void AMainCharacter::Fire()
 {
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->Fire();
+	}
+	else if (MeleeWeapon)
+	{
+		MeleeWeapon->Fire();
 	}
 	else
 	{

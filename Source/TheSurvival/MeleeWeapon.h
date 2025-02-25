@@ -21,8 +21,10 @@ public:
 	virtual void Interact(AActor* Interactor) override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	FName AmmoType;
+	FName WeaponType;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	UStaticMeshComponent* Mesh;
+
+	bool bIsEquipped;
 };
