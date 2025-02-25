@@ -57,26 +57,20 @@ void AGun::Fire()
     FHitResult HitResult;
     FCollisionQueryParams CollisionParams;
     CollisionParams.AddIgnoredActor(this);
+    CollisionParams.AddIgnoredActor(OwnerCharacter); // Игнорируем владельца оружия
 
-    if (GEngine)
+    // Исправляем канал трассировки с ECC_Visibility на ECC_Pawn
+    if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Pawn, CollisionParams))
     {
-        if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams))
-        {
-            DrawDebugLine(GetWorld(), Start, HitResult.Location, FColor::Red, false, 1.0f, 0, 1.0f);
-            DrawDebugSphere(GetWorld(), HitResult.Location, 10.0f, 12, FColor::Blue, false, 1.0f, 0, 1.0f);
+        DrawDebugLine(GetWorld(), Start, HitResult.Location, FColor::Red, false, 1.0f, 0, 1.0f);
+        DrawDebugSphere(GetWorld(), HitResult.Location, 10.0f, 12, FColor::Blue, false, 1.0f, 0, 1.0f);
 
-            DealDamage(HitResult.GetActor());
-        }
-        else
-        {
-            DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1.0f, 0, 1.0f);
-            DrawDebugSphere(GetWorld(), End, 10.0f, 12, FColor::Blue, false, 1.0f, 0, 1.0f);
-        }
-    }
-
-    if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams))
-    {
         DealDamage(HitResult.GetActor());
+    }
+    else
+    {
+        DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1.0f, 0, 1.0f);
+        DrawDebugSphere(GetWorld(), End, 10.0f, 12, FColor::Blue, false, 1.0f, 0, 1.0f);
     }
 }
 
