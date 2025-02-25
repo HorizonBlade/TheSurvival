@@ -22,4 +22,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
 	float Health;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float PatrolRadius = 1000.0f;
 };

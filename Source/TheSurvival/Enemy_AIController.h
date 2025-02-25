@@ -13,8 +13,14 @@ class THESURVIVAL_API AEnemy_AIController : public AAIController
 	GENERATED_BODY()
 	
 public:
-	void AEnemyCharacter();
+	AEnemy_AIController();
 
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float PatrolRadius = 1000.0f;
+
+	void MoveToRandomLocation();
 };
