@@ -57,9 +57,8 @@ void AGun::Fire()
     FHitResult HitResult;
     FCollisionQueryParams CollisionParams;
     CollisionParams.AddIgnoredActor(this);
-    CollisionParams.AddIgnoredActor(OwnerCharacter); // Игнорируем владельца оружия
+    CollisionParams.AddIgnoredActor(OwnerCharacter);
 
-    // Исправляем канал трассировки с ECC_Visibility на ECC_Pawn
     if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Pawn, CollisionParams))
     {
         DrawDebugLine(GetWorld(), Start, HitResult.Location, FColor::Red, false, 1.0f, 0, 1.0f);
