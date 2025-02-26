@@ -29,6 +29,12 @@ void ATheSurvivalPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &ATheSurvivalPlayerController::Sprint);
 	InputComponent->BindAction("Sprint", IE_Released, this, &ATheSurvivalPlayerController::StopSprint);
+
+	InputComponent->BindAction("Interact", IE_Pressed, this, &ATheSurvivalPlayerController::Interact);
+	InputComponent->BindAction("EquipWeapon", IE_Pressed, this, &ATheSurvivalPlayerController::EquipWeapon);
+	InputComponent->BindAction("EquipWeapon2", IE_Pressed, this, &ATheSurvivalPlayerController::EquipWeapon2);
+	InputComponent->BindAction("Fire", IE_Pressed, this, &ATheSurvivalPlayerController::Fire);
+	InputComponent->BindAction("Reload", IE_Pressed, this, &ATheSurvivalPlayerController::Reload);
 }
 
 void ATheSurvivalPlayerController::MoveForwardBackward(float Value)
@@ -99,6 +105,71 @@ void ATheSurvivalPlayerController::StopSprint()
 		if (MyCharacter)
 		{
 			MyCharacter->StopSprint();
+		}
+	}
+}
+
+void ATheSurvivalPlayerController::Interact()
+{
+	APawn* MyPawn = GetPawn();
+	if (MyPawn)
+	{
+		AMainCharacter* MyCharacter = Cast<AMainCharacter>(MyPawn);
+		if (MyCharacter)
+		{
+			MyCharacter->Interact();
+		}
+	}
+}
+
+void ATheSurvivalPlayerController::EquipWeapon()
+{
+	APawn* MyPawn = GetPawn();
+	if (MyPawn)
+	{
+		AMainCharacter* MyCharacter = Cast<AMainCharacter>(MyPawn);
+		if (MyCharacter)
+		{
+			MyCharacter->EquipWeapon();
+		}
+	}
+}
+
+void ATheSurvivalPlayerController::EquipWeapon2()
+{
+	APawn* MyPawn = GetPawn();
+	if (MyPawn)
+	{
+		AMainCharacter* MyCharacter = Cast<AMainCharacter>(MyPawn);
+		if (MyCharacter)
+		{
+			MyCharacter->EquipWeapon2();
+		}
+	}
+}
+
+void ATheSurvivalPlayerController::Fire()
+{
+	APawn* MyPawn = GetPawn();
+	if (MyPawn)
+	{
+		AMainCharacter* MyCharacter = Cast<AMainCharacter>(MyPawn);
+		if (MyCharacter)
+		{
+			MyCharacter->Fire();
+		}
+	}
+}
+
+void ATheSurvivalPlayerController::Reload()
+{
+	APawn* MyPawn = GetPawn();
+	if (MyPawn)
+	{
+		AMainCharacter* MyCharacter = Cast<AMainCharacter>(MyPawn);
+		if (MyCharacter)
+		{
+			MyCharacter->Reload();
 		}
 	}
 }

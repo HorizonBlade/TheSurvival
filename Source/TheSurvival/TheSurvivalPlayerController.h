@@ -32,4 +32,12 @@ protected:
 
 	void Sprint();
 	void StopSprint();
+
+	void Interact();
+
+	void EquipWeapon();
+	void EquipWeapon2();
+
+	void Fire();
+	void Reload();
 };
