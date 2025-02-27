@@ -39,6 +39,18 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons")
 	AMeleeWeapon* MeleeWeapon;
 
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundBase* WalkSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundBase* RunSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundBase* JumpSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundBase* LandSound;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -68,6 +80,10 @@ public:
 	void Fire();
 	void Reload();
 
+	void PlayFootstepSound();
+
+	void Landed(const FHitResult& Hit);
+
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UWBP_Inventory> InventoryWidgetClass;
 
@@ -79,4 +95,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
 	UInventoryComponent* InventoryComponent;
+
+	float LastFootstepTime = 0.0f;
 };

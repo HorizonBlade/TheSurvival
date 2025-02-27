@@ -6,6 +6,7 @@
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "EngineUtils.h"
+#include <Kismet/GameplayStatics.h>
 
 AMainCharacter::AMainCharacter()
 {
@@ -35,6 +36,18 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	CheckForInteractable();
+
+	if (GetVelocity().Size() > 10.f && GetCharacterMovement()->IsMovingOnGround())
+	{
+		float Speed = GetVelocity().Size(); // Получаем текущую скорость персонажа
+		float StepInterval = Speed > 300.f ? 0.35f : 0.5f; // Если скорость больше 300 — это бег, уменьшаем интервал
+
+		if (GetWorld()->TimeSeconds - LastFootstepTime > StepInterval)
+		{
+			PlayFootstepSound();
+			LastFootstepTime = GetWorld()->TimeSeconds;
+		}
+	}
 }
 
 void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -54,6 +67,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	InputComponent->BindAction("Sprint", IE_Released, this, &AMainCharacter::StopSprint);
 
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
+
+	InputComponent->BindAction("Inventory", IE_Pressed, this, &AMainCharacter::ToggleInventory);
 
 	InputComponent->BindAction("EquipWeapon", IE_Pressed, this, &AMainCharacter::EquipWeapon);
 	InputComponent->BindAction("EquipWeapon2", IE_Pressed, this, &AMainCharacter::EquipWeapon2);
@@ -86,6 +101,11 @@ void AMainCharacter::Jump()
 	}
 	Super::Jump();
 	bPressedJump = true;
+
+	if (JumpSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, JumpSound, GetActorLocation());
+	}
 }
 
 void AMainCharacter::StopJumping()
@@ -282,5 +302,27 @@ void AMainCharacter::Reload()
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->Reload();
+	}
+}
+
+void AMainCharacter::PlayFootstepSound()
+{
+	if (!GetCharacterMovement()->IsMovingOnGround()) return;
+
+	USoundBase* SoundToPlay = GetVelocity().Size() > 300.f ? RunSound : WalkSound;
+
+	if (SoundToPlay)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, SoundToPlay, GetActorLocation());
+	}
+}
+
+void AMainCharacter::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+
+	if (LandSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, LandSound, GetActorLocation());
 	}
 }
