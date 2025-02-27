@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "NavigationSystem.h"
+#include "MainCharacter.h"
 #include "TimerManager.h"
 
 
@@ -16,6 +17,8 @@ void AEnemy_AIController::BeginPlay()
 {
     Super::BeginPlay();
 
+    NavigationMesh = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
+
     ACharacter* ControlledCharacter = GetCharacter();
     if (!ControlledCharacter) return;
     MoveToRandomLocation();
@@ -24,21 +27,26 @@ void AEnemy_AIController::BeginPlay()
 
 void AEnemy_AIController::MoveToRandomLocation()
 {
-    AEnemyCharacter* Enemy = Cast<AEnemyCharacter>(GetPawn());
-    if (!Enemy) return;
+    AActor* DetectedPlayer = UGameplayStatics::GetActorOfClass(GetWorld(), AMainCharacter::StaticClass());
 
-    float Radius = Enemy->PatrolRadius;
-
-    UNavigationSystemV1* NavSystem = FNavigationSystem::GetCurrent<UNavigationSystemV1>(this);
-    if (!NavSystem) return;
-
-    FNavLocation RandomLocation;
-    if (NavSystem->GetRandomReachablePointInRadius(Enemy->GetActorLocation(), Radius, RandomLocation))
+    if (DetectedPlayer)
     {
-        MoveToLocation(RandomLocation.Location);
-    }
+        float DistanceToPlayer = FVector::Dist(GetPawn()->GetActorLocation(), DetectedPlayer->GetActorLocation());
 
-    float RandomDelay = FMath::RandRange(3.0f, 6.0f);
-    FTimerHandle TimerHandle;
-    GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AEnemy_AIController::MoveToRandomLocation, RandomDelay, false);
+        if (DistanceToPlayer <= DetectionRadius)
+        {
+            MoveToActor(DetectedPlayer);
+        }
+        else
+        {
+            if (NavigationMesh)
+            {
+                NavigationMesh->K2_GetRandomReachablePointInRadius(GetWorld(), GetPawn()->GetActorLocation(), RandomLocation, PatrolRadius);
+                MoveToLocation(RandomLocation);
+
+                FTimerHandle PointDelay;
+                GetWorld()->GetTimerManager().SetTimer(PointDelay, this, &AEnemy_AIController::MoveToRandomLocation, RandomMoveDelay, false, -1.0f);
+            }
+        }
+    }
 }

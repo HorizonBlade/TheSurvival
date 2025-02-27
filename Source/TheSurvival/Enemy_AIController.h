@@ -17,10 +17,19 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	class UNavigationSystemV1* NavigationMesh;
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	float PatrolRadius = 1000.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float DetectionRadius = 1000.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float RandomMoveDelay = 3.0f;
+
 	void MoveToRandomLocation();
+
+private:
+	FVector RandomLocation;
 };
