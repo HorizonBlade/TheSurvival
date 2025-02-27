@@ -6,6 +6,17 @@
 void UWBP_Inventory::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	if (Inventory)
+	{
+		Inventory->OnInventoryUpdated.AddDynamic(this, &UWBP_Inventory::RefreshInventory);
+
+		RefreshInventory();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Inventory is not set!"));
+	}
 }
 
 void UWBP_Inventory::SetInventory(UInventoryComponent* InInventory)
@@ -14,6 +25,9 @@ void UWBP_Inventory::SetInventory(UInventoryComponent* InInventory)
 	{
 		Inventory = InInventory;
 		UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: Inventory set successfully"));
+
+		Inventory->OnInventoryUpdated.AddDynamic(this, &UWBP_Inventory::RefreshInventory);
+
 		RefreshInventory();
 	}
 	else
@@ -51,7 +65,9 @@ void UWBP_Inventory::RefreshInventory()
 		if (ItemSlot)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: Successfully created ItemSlot widget"));
+
 			ItemSlot->SetItem(Item.ItemID, Item.Quantity);
+
 			UniformGridPanel->AddChildToUniformGrid(ItemSlot, Row, Column);
 
 			Column++;

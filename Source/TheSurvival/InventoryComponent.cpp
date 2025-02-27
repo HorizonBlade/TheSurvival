@@ -28,11 +28,13 @@ bool UInventoryComponent::AddItem(FName ItemID, int32 Quantity)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Added %d of item %s. New quantity: %d."), Quantity, *ItemID.ToString(), Item.Quantity);
 			Item.Quantity += Quantity;
+			OnInventoryUpdated.Broadcast();
 			return true;
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("New item %s added with quantity %d."), *ItemID.ToString(), Quantity);
 	Items.Add(FInventoryItem(ItemID, Quantity));
+	OnInventoryUpdated.Broadcast();
 	return true;
 }
 
@@ -52,12 +54,14 @@ bool UInventoryComponent::RemoveItem(FName ItemID, int32 Quantity)
 			{
 				Items[i].Quantity -= Quantity;
 				UE_LOG(LogTemp, Warning, TEXT("Removed %d of item %s. New quantity: %d."), Quantity, *ItemID.ToString(), Items[i].Quantity);
+				OnInventoryUpdated.Broadcast();
 				return true;
 			}
 			else
 			{
 				Items.RemoveAt(i);
 				UE_LOG(LogTemp, Warning, TEXT("Removed item %s completely."), *ItemID.ToString());
+				OnInventoryUpdated.Broadcast();
 				return true;
 			}
 		}

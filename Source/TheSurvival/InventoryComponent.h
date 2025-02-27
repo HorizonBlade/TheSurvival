@@ -4,6 +4,7 @@
 #include "Components/ActorComponent.h"
 #include "InventoryComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInventoryUpdated);
 
 USTRUCT(BlueprintType)
 struct FInventoryItem
@@ -43,6 +44,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	TArray<FInventoryItem> GetItems() const { return Items; }
 		
+	UPROPERTY(BlueprintAssignable, Category = "Inventory")
+	FInventoryUpdated OnInventoryUpdated;
 private:
 	UPROPERTY()
 	TArray<FInventoryItem> Items;
