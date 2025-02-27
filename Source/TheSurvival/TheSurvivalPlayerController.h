@@ -35,6 +35,8 @@ protected:
 
 	void Interact();
 
+	void ToggleInventory();
+
 	void EquipWeapon();
 	void EquipWeapon2();
 

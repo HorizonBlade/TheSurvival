@@ -31,6 +31,9 @@ void ATheSurvivalPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Sprint", IE_Released, this, &ATheSurvivalPlayerController::StopSprint);
 
 	InputComponent->BindAction("Interact", IE_Pressed, this, &ATheSurvivalPlayerController::Interact);
+
+	InputComponent->BindAction("Inventory", IE_Pressed, this, &ATheSurvivalPlayerController::ToggleInventory);
+
 	InputComponent->BindAction("EquipWeapon", IE_Pressed, this, &ATheSurvivalPlayerController::EquipWeapon);
 	InputComponent->BindAction("EquipWeapon2", IE_Pressed, this, &ATheSurvivalPlayerController::EquipWeapon2);
 	InputComponent->BindAction("Fire", IE_Pressed, this, &ATheSurvivalPlayerController::Fire);
@@ -118,6 +121,19 @@ void ATheSurvivalPlayerController::Interact()
 		if (MyCharacter)
 		{
 			MyCharacter->Interact();
+		}
+	}
+}
+
+void ATheSurvivalPlayerController::ToggleInventory()
+{
+	APawn* MyPawn = GetPawn();
+	if (MyPawn)
+	{
+		AMainCharacter* MyCharacter = Cast<AMainCharacter>(MyPawn);
+		if (MyCharacter)
+		{
+			MyCharacter->ToggleInventory();
 		}
 	}
 }
