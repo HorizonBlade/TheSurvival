@@ -208,7 +208,7 @@ void AMainCharacter::EquipWeapon()
 		return;
 	}
 
-	if (!InventoryComponent->HasItem(FName("Gun")))
+	if (!InventoryComponent->HasItem(FName("Pistol")))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("You don't have a gun in your inventory!"));
 		return;

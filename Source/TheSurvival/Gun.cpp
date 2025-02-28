@@ -80,7 +80,7 @@ void AGun::Interact(AActor* Interactor)
         UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
         if (Inventory)
         {
-            Inventory->AddItem(FName("Gun"), 1);
+            Inventory->AddItem(FName("Pistol"), 1);
 
             SetActorHiddenInGame(true);
             SetActorEnableCollision(false);
