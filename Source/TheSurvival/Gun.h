@@ -21,6 +21,7 @@ public:
 	virtual void Fire() override;
 	virtual void Reload() override;
 	virtual void Interact(AActor* Interactor) override;
+	virtual bool IsMelee() override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	FName WeaponType;

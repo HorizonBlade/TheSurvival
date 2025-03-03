@@ -17,7 +17,7 @@ public:
 	AMeleeWeapon();
 
 	virtual void Fire() override;
-
+	virtual bool IsMelee() override;
 	virtual void Interact(AActor* Interactor) override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")

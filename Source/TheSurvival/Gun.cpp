@@ -8,7 +8,6 @@ AGun::AGun()
     GunMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GunMesh"));
     GunMesh->SetupAttachment(RootComponent);
 
-    bIsMalee = false;
     bIsEquipped = false;
 
     MaxAmmoInClip = 12;
@@ -135,4 +134,9 @@ bool AGun::CanReload() const
 void AGun::AddAmmo(int32 AmmoAmount)
 {
     CurrentAmmoInClip = FMath::Min(CurrentAmmoInClip + AmmoAmount, MaxAmmoInClip);
+}
+
+bool AGun::IsMelee()
+{
+    return false;
 }

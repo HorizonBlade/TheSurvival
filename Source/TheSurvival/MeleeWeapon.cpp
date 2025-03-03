@@ -13,7 +13,6 @@ AMeleeWeapon::AMeleeWeapon()
     WeaponType = "MeleeWeapon";
 
     bIsEquipped = false;
-	bIsMalee = true;
 }
 
 void AMeleeWeapon::Fire()
@@ -55,4 +54,9 @@ void AMeleeWeapon::Interact(AActor* Interactor)
             SetActorEnableCollision(false);
         }
     }
+}
+
+bool AMeleeWeapon::IsMelee()
+{
+    return true;
 }

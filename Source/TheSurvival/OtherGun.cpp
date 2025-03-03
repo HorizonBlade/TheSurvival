@@ -9,7 +9,6 @@ AOtherGun::AOtherGun()
 
 	Damage = 25.0f;
 	AttackRate = 1.0f;
-	bIsMalee = false;
 	Ammo = 10;
 }
 
@@ -35,4 +34,9 @@ void AOtherGun::DealDamage(AActor* HitActor)
 	{
 		UGameplayStatics::ApplyDamage(HitActor, Damage, GetInstigatorController(), this, UDamageType::StaticClass());
 	}
+}
+
+bool AOtherGun::IsMelee()
+{
+	return false;
 }

@@ -27,8 +27,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	float AttackRate;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	bool bIsMalee;
+	virtual bool IsMelee();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	int32 Ammo;
