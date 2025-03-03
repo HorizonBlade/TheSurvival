@@ -1,4 +1,5 @@
 #include "BaseResource.h"
+#include "OtherGun.h"
 
 
 
@@ -14,15 +15,24 @@ ABaseResource::ABaseResource()
 
 float ABaseResource::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	Health -= DamageAmount;
-	UE_LOG(LogTemp, Warning, TEXT("Resource took %f damage, health left: %f"), DamageAmount, Health);
+    AOtherGun* OtherGun = Cast<AOtherGun>(DamageCauser);
+    if (OtherGun && OtherGun->IsMelee())
+    {
+        Health -= DamageAmount;
+        UE_LOG(LogTemp, Warning, TEXT("Resource took %f damage, health left: %f"), DamageAmount, Health);
 
-	if (Health <= 0)
-	{
-		DestroyResource();
-	}
+        if (Health <= 0)
+        {
+            DestroyResource();
+        }
 
-	return DamageAmount;
+        return DamageAmount;
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Resource can only be damaged by melee weapons."));
+        return 0.0f;
+    }
 }
 
 void ABaseResource::DestroyResource()
