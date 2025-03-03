@@ -19,6 +19,21 @@ public:
 	virtual void DestroyResource() override;
 	virtual void Interact(AActor* Interactor) override;
 
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
+	float FallDuration = 2.0f;
+
+	UPROPERTY()
+	float FallElapsedTime = 0.0f;
+
+	UPROPERTY()
+	FRotator InitialRotation;
+
+	UPROPERTY()
+	FRotator TargetRotation;
+
 private:
 	bool bIsFallen;
 };
