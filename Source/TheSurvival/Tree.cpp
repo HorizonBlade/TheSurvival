@@ -23,14 +23,17 @@ void ATree::DestroyResource()
 
 void ATree::Interact(AActor* Interactor)
 {
-	if (Interactor)
+	if (bIsFallen && Interactor)
 	{
-		UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
-		if (Inventory)
+		if (Interactor)
 		{
-			Inventory->AddItem(FName("Tree"), 5);
+			UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
+			if (Inventory)
+			{
+				Inventory->AddItem(FName("Tree"), 5);
 
-			Destroy();
+				Destroy();
+			}
 		}
 	}
 }
