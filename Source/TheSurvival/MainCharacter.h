@@ -51,6 +51,24 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Sound")
 	USoundBase* LandSound;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
+	float Health = 100.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
+	float Hunger = 100.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
+	float Thirst = 100.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
+	float HungerDecreaseRate = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
+	float ThirstDecreaseRate = 1.5f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
+	float SprintMultiplier = 2.0f;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -84,11 +102,18 @@ public:
 
 	void Landed(const FHitResult& Hit);
 
+	void StartHungerThirstTimer();
+	void ApplyHungerThirstEffects();
+
+	void Eat(float Amount);
+	void Drink(float Amount);
+
+	void Die();
+
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UWBP_Inventory> InventoryWidgetClass;
 
 	UWBP_Inventory* InventoryWidget;
-
 
 private:
 	AActor* InteractableActor;
@@ -97,4 +122,6 @@ private:
 	UInventoryComponent* InventoryComponent;
 
 	float LastFootstepTime = 0.0f;
+
+	FTimerHandle HungerThirstTimer;
 };

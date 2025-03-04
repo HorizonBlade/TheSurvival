@@ -23,6 +23,10 @@ AMainCharacter::AMainCharacter()
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 
 	JumpMontage = nullptr;
+
+	Health = 100.0f;
+	Hunger = 100.0f;
+	Thirst = 100.0f;
 }
 
 void AMainCharacter::BeginPlay()
@@ -30,6 +34,7 @@ void AMainCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	GetCharacterMovement()->MaxWalkSpeed = 125.f;
+	StartHungerThirstTimer();
 }
 
 void AMainCharacter::Tick(float DeltaTime)
@@ -39,8 +44,8 @@ void AMainCharacter::Tick(float DeltaTime)
 
 	if (GetVelocity().Size() > 10.f && GetCharacterMovement()->IsMovingOnGround())
 	{
-		float Speed = GetVelocity().Size(); // Получаем текущую скорость персонажа
-		float StepInterval = Speed > 300.f ? 0.35f : 0.5f; // Если скорость больше 300 — это бег, уменьшаем интервал
+		float Speed = GetVelocity().Size();
+		float StepInterval = Speed > 300.f ? 0.35f : 0.5f;
 
 		if (GetWorld()->TimeSeconds - LastFootstepTime > StepInterval)
 		{
@@ -325,4 +330,42 @@ void AMainCharacter::Landed(const FHitResult& Hit)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, LandSound, GetActorLocation());
 	}
+}
+
+void AMainCharacter::StartHungerThirstTimer()
+{
+	GetWorld()->GetTimerManager().SetTimer(HungerThirstTimer, this, &AMainCharacter::ApplyHungerThirstEffects, 5.0f, true);
+}
+
+void AMainCharacter::ApplyHungerThirstEffects()
+{
+	float HungerLoss = HungerDecreaseRate * (bIsSprint ? SprintMultiplier : 1.0f);
+	float ThirstLoss = ThirstDecreaseRate * (bIsSprint ? SprintMultiplier : 1.0f);
+
+	Hunger = FMath::Clamp(Hunger - HungerLoss, 0.0f, 100.0f);
+	Thirst = FMath::Clamp(Thirst - ThirstLoss, 0.0f, 100.0f);
+
+	if (Hunger == 0.0f || Thirst == 0.0f)
+	{
+		Health = FMath::Clamp(Health - 5.0f, 0.0f, 100.0f);
+		if (Health <= 0.0f)
+		{
+			Die();
+		}
+	}
+}
+
+void AMainCharacter::Eat(float Amount)
+{
+	Hunger = FMath::Clamp(Hunger + Amount, 0.0f, 100.0f);
+}
+
+void AMainCharacter::Drink(float Amount)
+{
+	Thirst = FMath::Clamp(Thirst + Amount, 0.0f, 100.0f);
+}
+
+void AMainCharacter::Die()
+{
+	UE_LOG(LogTemp, Warning, TEXT("player is dead"));
 }
