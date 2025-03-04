@@ -13,6 +13,9 @@
 #include "MeleeWeapon.h"
 #include "MainCharacter.generated.h"
 
+class UUserWidget;
+class UStatsWidget;
+
 UCLASS()
 class THESURVIVAL_API AMainCharacter : public ACharacter
 {
@@ -61,13 +64,19 @@ protected:
 	float Thirst = 100.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
-	float HungerDecreaseRate = 1.0f;
+	float HungerDecreaseRate = 0.5f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
-	float ThirstDecreaseRate = 1.5f;
+	float ThirstDecreaseRate = 0.6f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Stats")
 	float SprintMultiplier = 2.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> StatsWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	UUserWidget* StatsWidget;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
@@ -109,6 +118,15 @@ public:
 	void Drink(float Amount);
 
 	void Die();
+
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+	float GetHealthPercent() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+	float GetHungerPercent() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+	float GetThirstPercent() const;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UWBP_Inventory> InventoryWidgetClass;

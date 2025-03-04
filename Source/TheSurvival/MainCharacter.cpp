@@ -6,6 +6,7 @@
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "EngineUtils.h"
+#include "StatsWidget.h"
 #include <Kismet/GameplayStatics.h>
 
 AMainCharacter::AMainCharacter()
@@ -35,6 +36,22 @@ void AMainCharacter::BeginPlay()
 	
 	GetCharacterMovement()->MaxWalkSpeed = 125.f;
 	StartHungerThirstTimer();
+
+	UE_LOG(LogTemp, Warning, TEXT("Starting parameters: Health=%f, Hunger=%f, Thirst=%f"), Health, Hunger, Thirst);
+
+	if (StatsWidgetClass)
+	{
+		StatsWidget = CreateWidget<UUserWidget>(GetWorld(), StatsWidgetClass);
+		if (StatsWidget && Cast<UStatsWidget>(StatsWidget))
+		{
+			Cast<UStatsWidget>(StatsWidget)->SetOwningPlayer(this);
+		}
+		if (StatsWidget)
+		{
+			StatsWidget->AddToViewport();
+		}
+	}
+
 }
 
 void AMainCharacter::Tick(float DeltaTime)
@@ -345,6 +362,8 @@ void AMainCharacter::ApplyHungerThirstEffects()
 	Hunger = FMath::Clamp(Hunger - HungerLoss, 0.0f, 100.0f);
 	Thirst = FMath::Clamp(Thirst - ThirstLoss, 0.0f, 100.0f);
 
+	UE_LOG(LogTemp, Warning, TEXT("Parameters decreased: Health=%f, Hunger=%f, Thirst=%f"), Health, Hunger, Thirst)
+
 	if (Hunger == 0.0f || Thirst == 0.0f)
 	{
 		Health = FMath::Clamp(Health - 5.0f, 0.0f, 100.0f);
@@ -358,14 +377,31 @@ void AMainCharacter::ApplyHungerThirstEffects()
 void AMainCharacter::Eat(float Amount)
 {
 	Hunger = FMath::Clamp(Hunger + Amount, 0.0f, 100.0f);
+	UE_LOG(LogTemp, Warning, TEXT("Eaten: Hunger=%f"), Hunger);
 }
 
 void AMainCharacter::Drink(float Amount)
 {
 	Thirst = FMath::Clamp(Thirst + Amount, 0.0f, 100.0f);
+	UE_LOG(LogTemp, Warning, TEXT("Drunk: Thirst=%f"), Thirst);
 }
 
 void AMainCharacter::Die()
 {
 	UE_LOG(LogTemp, Warning, TEXT("player is dead"));
+}
+
+float AMainCharacter::GetHealthPercent() const
+{
+	return Health / 100.0f;
+}
+
+float AMainCharacter::GetHungerPercent() const
+{
+	return Hunger / 100.0f;
+}
+
+float AMainCharacter::GetThirstPercent() const
+{
+	return Thirst / 100.0f;
 }
