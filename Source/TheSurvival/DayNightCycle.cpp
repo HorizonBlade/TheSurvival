@@ -17,7 +17,6 @@ void ADayNightCycle::BeginPlay()
 
     TimeOfDay = 0.0f;
 
-    // »щем DirectionalLight в сцене
     TArray<AActor*> Lights;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADirectionalLight::StaticClass(), Lights);
 
