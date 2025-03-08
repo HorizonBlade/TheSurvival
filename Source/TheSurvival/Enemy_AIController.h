@@ -17,7 +17,15 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
 	class UNavigationSystemV1* NavigationMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float NightSpeedMultiplier = 800.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float EveningStartHour = 18.0f;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	float PatrolRadius = 1000.0f;
@@ -30,6 +38,10 @@ public:
 
 	void MoveToRandomLocation();
 
+	void UpdateEnemySpeed(bool bPlayerDetected);
+
 private:
 	FVector RandomLocation;
+
+	bool bIsChasingPlayer;
 };

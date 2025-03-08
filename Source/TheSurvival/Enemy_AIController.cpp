@@ -6,11 +6,13 @@
 #include "NavigationSystem.h"
 #include "MainCharacter.h"
 #include "TimerManager.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 
 AEnemy_AIController::AEnemy_AIController()
 {
+    PrimaryActorTick.bCanEverTick = true;
 }
 
 void AEnemy_AIController::BeginPlay()
@@ -35,10 +37,12 @@ void AEnemy_AIController::MoveToRandomLocation()
 
         if (DistanceToPlayer <= DetectionRadius)
         {
+            UpdateEnemySpeed(true);
             MoveToActor(DetectedPlayer);
         }
         else
         {
+             UpdateEnemySpeed(false);
             if (NavigationMesh)
             {
                 NavigationMesh->K2_GetRandomReachablePointInRadius(GetWorld(), GetPawn()->GetActorLocation(), RandomLocation, PatrolRadius);
@@ -47,6 +51,22 @@ void AEnemy_AIController::MoveToRandomLocation()
                 FTimerHandle PointDelay;
                 GetWorld()->GetTimerManager().SetTimer(PointDelay, this, &AEnemy_AIController::MoveToRandomLocation, RandomMoveDelay, false, -1.0f);
             }
+        }
+    }
+}
+
+void AEnemy_AIController::UpdateEnemySpeed(bool bPlayerDetected)
+{
+    AEnemyCharacter* Enemy = Cast<AEnemyCharacter>(GetPawn());
+    if (Enemy)
+    {
+        if (bPlayerDetected)
+        {
+            Enemy->GetCharacterMovement()->MaxWalkSpeed = 520.0f;
+        }
+        else
+        {
+            Enemy->GetCharacterMovement()->MaxWalkSpeed = 250.0f;
         }
     }
 }

@@ -1,4 +1,5 @@
 #include "EnemyCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 
@@ -12,7 +13,7 @@ void AEnemyCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    
+    GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 }
 
 float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
