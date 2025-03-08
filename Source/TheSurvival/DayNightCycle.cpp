@@ -82,7 +82,7 @@ void ADayNightCycle::UpdateSunAndMoon()
 
     if (SunLight)
     {
-        SunLight->SetActorRotation(FRotator(SunAngle - 90.0f, -30.0f, 0.0f));
+        SunLight->SetActorRotation(FRotator(SunAngle - 180, -30.0f, 0.0f));
 
         float SunIntensity = FMath::Clamp(FMath::Sin(FMath::DegreesToRadians(SunAngle)), 0.0f, 1.0f) * 100000.0f;
         SunLight->GetLightComponent()->SetIntensity(SunIntensity);
@@ -91,7 +91,7 @@ void ADayNightCycle::UpdateSunAndMoon()
     if (MoonLight)
     {
         float MoonAngle = SunAngle + 180.0f;
-        MoonLight->SetActorRotation(FRotator(MoonAngle - 90.0f, -30.0f, 0.0f));
+        MoonLight->SetActorRotation(FRotator(MoonAngle - 180.0f, -30.0f, 0.0f));
 
         float MoonIntensity = FMath::Clamp(FMath::Sin(FMath::DegreesToRadians(MoonAngle)), 0.0f, 1.0f) * 50000.0f;
         MoonLight->GetLightComponent()->SetIntensity(MoonIntensity);
