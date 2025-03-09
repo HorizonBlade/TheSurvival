@@ -111,3 +111,23 @@ void UWBP_Inventory::RefreshInventory()
         }
     }
 }
+
+FText UWBP_Inventory::GetPistolText() const
+{
+    if (Inventory)
+    {
+        int32 PistolQuantity = Inventory->GetItemAmount(FName("Pistol"));
+        return FText::AsNumber(PistolQuantity);
+    }
+    return FText::AsNumber(0);
+}
+
+FText UWBP_Inventory::GetWoodText() const
+{
+    if (Inventory)
+    {
+        int32 WoodQuantity = Inventory->GetItemAmount(FName("Wood"));
+        return FText::AsNumber(WoodQuantity);
+    }
+    return FText::AsNumber(0);
+}
