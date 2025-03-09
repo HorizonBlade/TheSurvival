@@ -62,7 +62,7 @@ void ATree::Interact(AActor* Interactor)
 			UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
 			if (Inventory)
 			{
-				Inventory->AddItem(FName("Tree"), 5);
+				Inventory->AddItem(FName("Wood"), 5);
 
 				Destroy();
 			}
