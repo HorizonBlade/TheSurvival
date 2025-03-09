@@ -50,8 +50,6 @@ public:
     UFUNCTION(BlueprintCallable)
     FText GetRockText() const;
 private:
-    UPROPERTY(meta = (BindWidget))
-    class UUniformGridPanel* UniformGridPanel;
 
     UPROPERTY()
     UInventoryComponent* Inventory;

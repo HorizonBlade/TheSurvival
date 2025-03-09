@@ -1,6 +1,4 @@
 #include "WBP_Inventory.h"
-#include "WBP_ItemSlot.h"
-#include "Components/UniformGridPanel.h"
 #include "Engine/Engine.h"
 
 void UWBP_Inventory::NativeConstruct()
@@ -13,9 +11,6 @@ void UWBP_Inventory::NativeConstruct()
     if (Inventory)
     {
         Inventory->OnInventoryUpdated.AddDynamic(this, &UWBP_Inventory::RefreshInventory);
-
-        UE_LOG(LogTemp, Warning, TEXT("UniformGridPanel: %p"), UniformGridPanel);
-
         RefreshInventory();
     }
     else
@@ -46,10 +41,7 @@ void UWBP_Inventory::SetInventory(UInventoryComponent* InInventory)
     {
         Inventory = InInventory;
         UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: Inventory set successfully"));
-
         UE_LOG(LogTemp, Warning, TEXT("Inventory: %p"), Inventory);
-        UE_LOG(LogTemp, Warning, TEXT("UniformGridPanel: %p"), UniformGridPanel);
-
         RefreshInventory();
     }
     else
@@ -63,52 +55,30 @@ void UWBP_Inventory::RefreshInventory()
     UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: RefreshInventory called"));
     UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: RefreshInventory: This: %p"), this);
 
-    if (!UniformGridPanel || !Inventory)
+    if (!Inventory)
     {
-        UE_LOG(LogTemp, Error, TEXT("UWBP_Inventory: Invalid UniformGridPanel or Inventory"));
+        UE_LOG(LogTemp, Error, TEXT("UWBP_Inventory: Inventory is null"));
         return;
     }
-
-    UniformGridPanel->ClearChildren();
-
-    TArray<FInventoryItem> Items = Inventory->GetItems();
-
-    if (Items.Num() == 0)
+    if (Pistol_Quantity)
     {
-        UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: No items in inventory"));
+        Pistol_Quantity->SetText(GetPistolText());
     }
-    else
+    if (Wood_Quantity)
     {
-        int32 Column = 0;
-        int32 Row = 0;
-
-        for (const FInventoryItem& Item : Items)
-        {
-            UWBP_ItemSlot* NewItemSlot = CreateWidget<UWBP_ItemSlot>(this, UWBP_ItemSlot::StaticClass());
-
-            if (NewItemSlot)
-            {
-                UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: ItemSlot created: %p"), NewItemSlot);
-                UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: ItemSlot created: This: %p, NewItemSlot: %p"), this, NewItemSlot);
-
-                NewItemSlot->SetItem(Item.ItemID, Item.Quantity);
-                UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: SetItem called for ItemID: %s"), *Item.ItemID.ToString());
-
-                UniformGridPanel->AddChildToUniformGrid(NewItemSlot, Row, Column);
-                UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: ItemSlot added to UniformGridPanel"));
-
-                Column++;
-                if (Column >= 5)
-                {
-                    Column = 0;
-                    Row++;
-                }
-            }
-            else
-            {
-                UE_LOG(LogTemp, Error, TEXT("UWBP_Inventory: Failed to create ItemSlot widget"));
-            }
-        }
+        Wood_Quantity->SetText(GetWoodText());
+    }
+    if (Ammo_Quantity)
+    {
+        Ammo_Quantity->SetText(GetAmmoText());
+    }
+    if (Axe_Quantity)
+    {
+        Axe_Quantity->SetText(GetAxeText());
+    }
+    if (Rock_Quantity)
+    {
+        Rock_Quantity->SetText(GetRockText());
     }
 }
 
