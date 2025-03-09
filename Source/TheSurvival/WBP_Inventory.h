@@ -20,6 +20,15 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
     UTextBlock* Wood_Quantity;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+    UTextBlock* Ammo_Quantity;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+    UTextBlock* Axe_Quantity;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+    UTextBlock* Rock_Quantity;
 public:
     void SetInventory(UInventoryComponent* InInventory);
 
@@ -31,6 +40,15 @@ public:
 
     UFUNCTION(BlueprintCallable)
     FText GetWoodText() const;
+
+    UFUNCTION(BlueprintCallable)
+    FText GetAmmoText() const;
+
+    UFUNCTION(BlueprintCallable)
+    FText GetAxeText() const;
+
+    UFUNCTION(BlueprintCallable)
+    FText GetRockText() const;
 private:
     UPROPERTY(meta = (BindWidget))
     class UUniformGridPanel* UniformGridPanel;

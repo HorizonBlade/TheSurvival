@@ -131,3 +131,33 @@ FText UWBP_Inventory::GetWoodText() const
     }
     return FText::AsNumber(0);
 }
+
+FText UWBP_Inventory::GetAmmoText() const
+{
+    if (Inventory)
+    {
+        int32 AmmoQuantity = Inventory->GetItemAmount(FName("PistolAmmo"));
+        return FText::AsNumber(AmmoQuantity);
+    }
+    return FText::AsNumber(0);
+}
+
+FText UWBP_Inventory::GetAxeText() const
+{
+    if (Inventory)
+    {
+        int32 AxeQuantity = Inventory->GetItemAmount(FName("MeleeWeapon"));
+        return FText::AsNumber(AxeQuantity);
+    }
+    return FText::AsNumber(0);
+}
+
+FText UWBP_Inventory::GetRockText() const
+{
+    if (Inventory)
+    {
+        int32 RockQuantity = Inventory->GetItemAmount(FName("Rock"));
+        return FText::AsNumber(RockQuantity);
+    }
+    return FText::AsNumber(0);
+}
