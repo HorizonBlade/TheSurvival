@@ -1,5 +1,3 @@
-
-
 #include "MainCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Animation/AnimMontage.h"
@@ -8,6 +6,7 @@
 #include "EngineUtils.h"
 #include "StatsWidget.h"
 #include <Kismet/GameplayStatics.h>
+#include "GameFramework/PlayerController.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -201,6 +200,9 @@ void AMainCharacter::Interact()
 
 void AMainCharacter::ToggleInventory()
 {
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (!PlayerController) return;
+
 	if (!InventoryWidget)
 	{
 		InventoryWidget = CreateWidget<UWBP_Inventory>(GetWorld(), InventoryWidgetClass);
@@ -208,12 +210,22 @@ void AMainCharacter::ToggleInventory()
 		{
 			InventoryWidget->SetInventory(InventoryComponent);
 			InventoryWidget->AddToViewport();
+
+			FInputModeGameAndUI InputMode;
+			InputMode.SetWidgetToFocus(InventoryWidget->TakeWidget());
+			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			PlayerController->SetInputMode(InputMode);
+			PlayerController->bShowMouseCursor = true;
 		}
 	}
 	else
 	{
 		InventoryWidget->RemoveFromParent();
 		InventoryWidget = nullptr;
+
+		PlayerController->bShowMouseCursor = false;
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->FlushPressedKeys();
 	}
 }
 
