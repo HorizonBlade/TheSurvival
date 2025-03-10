@@ -4,6 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "InventoryComponent.h"
 #include "Components/TextBlock.h"
+#include <Components/Button.h>
 #include "WBP_Inventory.generated.h"
 
 UCLASS()
@@ -14,6 +15,9 @@ class THESURVIVAL_API UWBP_Inventory : public UUserWidget
 protected:
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* CraftsButton;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
     UTextBlock* Pistol_Quantity;
@@ -49,6 +53,14 @@ public:
 
     UFUNCTION(BlueprintCallable)
     FText GetRockText() const;
+
+    UFUNCTION()
+    void OnCraftsButtonClicked();
+    UUserWidget* ActiveWidget = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+    TSubclassOf<UUserWidget> CraftsWidgetClass;
+
 private:
 
     UPROPERTY()

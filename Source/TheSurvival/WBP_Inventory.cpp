@@ -17,6 +17,11 @@ void UWBP_Inventory::NativeConstruct()
     {
         UE_LOG(LogTemp, Warning, TEXT("Inventory is not set!"));
     }
+
+    if (CraftsButton)
+    {
+        CraftsButton->OnClicked.AddDynamic(this, &UWBP_Inventory::OnCraftsButtonClicked);
+    }
 }
 
 void UWBP_Inventory::NativeDestruct()
@@ -130,4 +135,20 @@ FText UWBP_Inventory::GetRockText() const
         return FText::AsNumber(RockQuantity);
     }
     return FText::AsNumber(0);
+}
+
+void UWBP_Inventory::OnCraftsButtonClicked()
+{
+    if (CraftsWidgetClass)
+    {
+        if (!ActiveWidget)
+        {
+            ActiveWidget = CreateWidget<UUserWidget>(GetWorld(), CraftsWidgetClass);
+        }
+
+        if (ActiveWidget && !ActiveWidget->IsInViewport())
+        {
+            ActiveWidget->AddToViewport();
+        }
+    }
 }
