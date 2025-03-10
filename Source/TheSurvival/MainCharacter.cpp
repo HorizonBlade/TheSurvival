@@ -220,6 +220,12 @@ void AMainCharacter::ToggleInventory()
 	}
 	else
 	{
+		if (InventoryWidget->ActiveWidget && InventoryWidget->ActiveWidget->IsInViewport())
+		{
+			InventoryWidget->ActiveWidget->RemoveFromParent();
+			InventoryWidget->ActiveWidget = nullptr;
+		}
+
 		InventoryWidget->RemoveFromParent();
 		InventoryWidget = nullptr;
 

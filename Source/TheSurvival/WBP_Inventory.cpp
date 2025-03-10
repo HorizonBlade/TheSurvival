@@ -1,5 +1,6 @@
 #include "WBP_Inventory.h"
 #include "Engine/Engine.h"
+#include "WBP_Crafting.h"
 
 void UWBP_Inventory::NativeConstruct()
 {
@@ -21,6 +22,7 @@ void UWBP_Inventory::NativeConstruct()
     if (CraftsButton)
     {
         CraftsButton->OnClicked.AddDynamic(this, &UWBP_Inventory::OnCraftsButtonClicked);
+        UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: CraftsButton delegate bound"));
     }
 }
 
@@ -35,6 +37,12 @@ void UWBP_Inventory::NativeDestruct()
     {
         Inventory->OnInventoryUpdated.RemoveDynamic(this, &UWBP_Inventory::RefreshInventory);
     }
+
+    if (CraftsButton)
+    {
+        CraftsButton->OnClicked.RemoveDynamic(this, &UWBP_Inventory::OnCraftsButtonClicked);
+    }
+    UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: NativeDestruct called, attempting to unbind CraftsButton delegate"));
 }
 
 void UWBP_Inventory::SetInventory(UInventoryComponent* InInventory)
@@ -139,11 +147,17 @@ FText UWBP_Inventory::GetRockText() const
 
 void UWBP_Inventory::OnCraftsButtonClicked()
 {
+    UE_LOG(LogTemp, Warning, TEXT("UWBP_Inventory: OnCraftsButtonClicked called"));
     if (CraftsWidgetClass)
     {
-        if (!ActiveWidget)
+        if (!ActiveWidget || !IsValid(ActiveWidget))
         {
-            ActiveWidget = CreateWidget<UUserWidget>(GetWorld(), CraftsWidgetClass);
+            ActiveWidget = CreateWidget<UWBP_Crafting>(GetWorld(), CraftsWidgetClass);
+            UWBP_Crafting* CraftWidget = Cast<UWBP_Crafting>(ActiveWidget);
+            if (CraftWidget)
+            {
+                CraftWidget->OwningInventoryWidget = this;
+            }
         }
 
         if (ActiveWidget && !ActiveWidget->IsInViewport())

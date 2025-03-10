@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include <Components/Button.h>
+#include "WBP_Inventory.h"
 #include "WBP_Crafting.generated.h"
 
 /**
@@ -16,8 +17,12 @@ class THESURVIVAL_API UWBP_Crafting : public UUserWidget
 protected:
     virtual void NativeConstruct() override;
 public:
-    UPROPERTY(meta = (BindWidget))
-    UButton* BackButton;
+
+    UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+    class UButton* BackButton;
+
+    UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+    class UWBP_Inventory* OwningInventoryWidget;
 
     UFUNCTION()
     void OnBackButtonClicked();
