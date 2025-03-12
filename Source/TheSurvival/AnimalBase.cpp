@@ -1,4 +1,5 @@
 #include "AnimalBase.h"
+#include "AnimalAIController.h"
 
 
 AAnimalBase::AAnimalBase()
@@ -8,6 +9,9 @@ AAnimalBase::AAnimalBase()
     Health = 100.0f;
     MeatAmount = 5.0f;
     SkinAmount = 2.0f;
+
+    AIControllerClass = AAnimalAIController::StaticClass();
+    AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 void AAnimalBase::BeginPlay()
