@@ -15,6 +15,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void FleeFromPlayer(AActor* Player);
 public:	
 	virtual void Tick(float DeltaTime) override;
 
@@ -32,4 +34,14 @@ public:
 		AController* EventInstigator, AActor* DamageCauser) override;
 
 	void Die();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float WalkSpeed = 200.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float RunSpeed = 600.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float DetectionRadius = 600.0f;
+
 };
