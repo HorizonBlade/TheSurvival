@@ -1,6 +1,7 @@
 #include "AnimalBase.h"
 #include "AnimalAIController.h"
 #include "AnimalAIController.h"
+#include "InventoryComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -55,6 +56,12 @@ float AAnimalBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 
 void AAnimalBase::Die()
 {
+    if (bIsDead) return;
+
+    bIsDead = true;
+    SkinHealth = 100;
+    UE_LOG(LogTemp, Warning, TEXT("The animal has been killed. Now we have to skin it!"));
+
     if (GetCharacterMovement())
     {
         GetCharacterMovement()->DisableMovement();
@@ -95,4 +102,32 @@ void AAnimalBase::FleeFromPlayer(AActor* Player)
     {
         AIController->MoveToLocation(FleeTarget);
     }
+}
+
+void AAnimalBase::TakeSkinDamage(float Damage)
+{
+    if (!bIsDead || bCanBeSkinned) return;
+
+    SkinHealth -= Damage;
+    UE_LOG(LogTemp, Warning, TEXT("The skin is damaged. Remaining: %f"), SkinHealth);
+
+    if (SkinHealth <= 0)
+    {
+        bCanBeSkinned = true;
+        UE_LOG(LogTemp, Warning, TEXT("You can now pick up the hide through Interact!"));
+    }
+}
+
+void AAnimalBase::Interact(AActor* Interactor)
+{
+    if (!bCanBeSkinned) return;
+
+    UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
+    if (Inventory)
+    {
+        Inventory->AddItem(FName("AnimalSkin"), 2);
+        UE_LOG(LogTemp, Warning, TEXT("The hide has been added to the inventory!"));
+    }
+
+    Destroy();
 }
