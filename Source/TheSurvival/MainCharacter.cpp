@@ -69,6 +69,31 @@ void AMainCharacter::Tick(float DeltaTime)
 			LastFootstepTime = GetWorld()->TimeSeconds;
 		}
 	}
+
+	if (GetCharacterMovement()->IsCrouching())
+	{
+		FVector Velocity = GetVelocity();
+		float Speed = Velocity.Size();
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+		if (AnimInstance)
+		{
+			if (Speed > 5.0f)
+			{
+				if (CrouchWalkMontage && !AnimInstance->Montage_IsPlaying(CrouchWalkMontage))
+				{
+					AnimInstance->Montage_Play(CrouchWalkMontage, 1.0f);
+				}
+			}
+			else
+			{
+				if (CrouchMontage && !AnimInstance->Montage_IsPlaying(CrouchMontage))
+				{
+					AnimInstance->Montage_Play(CrouchMontage, 1.0f);
+				}
+			}
+		}
+	}
 }
 
 void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -163,11 +188,27 @@ void AMainCharacter::StopSprint()
 void AMainCharacter::StartCrouch()
 {
 	Crouch();
+
+	if (CrouchMontage)
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (AnimInstance)
+		{
+			AnimInstance->Montage_Play(CrouchMontage, 1.0f);
+		}
+	}
 }
 
 void AMainCharacter::StopCrouch()
 {
 	UnCrouch();
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_Stop(0.2f, CrouchMontage);
+		AnimInstance->Montage_Stop(0.2f, CrouchWalkMontage);
+	}
 }
 
 void AMainCharacter::CheckForInteractable()
