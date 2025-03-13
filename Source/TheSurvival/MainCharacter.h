@@ -94,6 +94,9 @@ public:
 	void Sprint();
 	void StopSprint();
 
+	void StartCrouch();
+	void StopCrouch();
+
 	bool bIsSprint;
 	bool bPressedJump;
 

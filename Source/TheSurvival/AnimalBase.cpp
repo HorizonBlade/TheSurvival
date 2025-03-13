@@ -15,7 +15,6 @@ AAnimalBase::AAnimalBase()
     AIControllerClass = AAnimalAIController::StaticClass();
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-    bHasSkin = false;
 }
 
 void AAnimalBase::BeginPlay()

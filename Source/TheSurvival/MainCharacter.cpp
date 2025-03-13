@@ -87,6 +87,9 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &AMainCharacter::Sprint);
 	InputComponent->BindAction("Sprint", IE_Released, this, &AMainCharacter::StopSprint);
 
+	InputComponent->BindAction("Crouch", IE_Pressed, this, &AMainCharacter::StartCrouch);
+	InputComponent->BindAction("Crouch", IE_Released, this, &AMainCharacter::StopCrouch);
+
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
 
 	InputComponent->BindAction("Inventory", IE_Pressed, this, &AMainCharacter::ToggleInventory);
@@ -155,6 +158,16 @@ void AMainCharacter::StopSprint()
 {
 	bIsSprint = false;
 	GetCharacterMovement()->MaxWalkSpeed = 125.0f;
+}
+
+void AMainCharacter::StartCrouch()
+{
+	Crouch();
+}
+
+void AMainCharacter::StopCrouch()
+{
+	UnCrouch();
 }
 
 void AMainCharacter::CheckForInteractable()
