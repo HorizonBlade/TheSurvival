@@ -14,6 +14,8 @@ AAnimalBase::AAnimalBase()
 
     AIControllerClass = AAnimalAIController::StaticClass();
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+    bHasSkin = false;
 }
 
 void AAnimalBase::BeginPlay()
@@ -54,6 +56,28 @@ float AAnimalBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 
 void AAnimalBase::Die()
 {
+    if (GetCharacterMovement())
+    {
+        GetCharacterMovement()->DisableMovement();
+    }
+
+    if (GetController())
+    {
+        GetController()->UnPossess();
+    }
+
+    if (GetMesh())
+    {
+        GetMesh()->SetSimulatePhysics(true);
+        GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+        FVector Impulse = FVector(FMath::RandRange(-200, 200), FMath::RandRange(-200, 200), 0);
+        GetMesh()->AddImpulse(Impulse, NAME_None, true);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("AAnimalBase::Die() - Mesh is nullptr!"));
+    }
 }
 
 void AAnimalBase::FleeFromPlayer(AActor* Player)
