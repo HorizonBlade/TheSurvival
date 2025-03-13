@@ -217,17 +217,21 @@ void AMainCharacter::CheckForInteractable()
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(this);
 
-	FVector StartLocation = GetActorLocation();
-	FVector EndLocation = StartLocation + (GetActorForwardVector() * 200.0f);
+	FVector EyeLocation;
+	FRotator EyeRotation;
+	GetActorEyesViewPoint(EyeLocation, EyeRotation);
 
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, CollisionParams);
+	FVector Start = EyeLocation;
+	FVector ForwardVector = EyeRotation.Vector();
+	FVector End = Start + (ForwardVector * 200.0f);
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams);
 
 	if (bHit)
 	{
-		AActor* HitActor = HitResult.GetActor();
-		if (HitActor && HitActor->Implements<UIInteractable>())
+		if (HitResult.GetActor() && HitResult.GetActor()->Implements<UIInteractable>())
 		{
-			InteractableActor = HitActor;
+			InteractableActor = HitResult.GetActor();
 		}
 		else
 		{
